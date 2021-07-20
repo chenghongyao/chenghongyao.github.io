@@ -1,0 +1,244 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>C/C++拾遗 | 围城</title><meta name="keywords" content="C++"><meta name="author" content="围城"><meta name="copyright" content="围城"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本问列举C++中的疑难杂症，易错点，可能还有一部分语法糖，大部分来自与网络。 [C++]当父类有静态变量 当父类有静态变量时（不管是类的还是成员函数中的），派生类拥有的是同一份静态变量。很容易理解的是，实际上静态变量都类似于全局变量，在编译完成后有确定的内存空间，这个空间不属于父类，也不属于子类。 12345678910111213141516171819202122232425262728293">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C&#x2F;C++拾遗">
+<meta property="og:url" content="https://blog.ycha.tld/2021/06/16/cpp/cpp-easy-mistake/index.html">
+<meta property="og:site_name" content="围城">
+<meta property="og:description" content="本问列举C++中的疑难杂症，易错点，可能还有一部分语法糖，大部分来自与网络。 [C++]当父类有静态变量 当父类有静态变量时（不管是类的还是成员函数中的），派生类拥有的是同一份静态变量。很容易理解的是，实际上静态变量都类似于全局变量，在编译完成后有确定的内存空间，这个空间不属于父类，也不属于子类。 12345678910111213141516171819202122232425262728293">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/chenghongyao/resources_for_jsdelivr/picgo/1623923703716.jpeg">
+<meta property="article:published_time" content="2021-06-16T21:33:29.000Z">
+<meta property="article:modified_time" content="2021-07-20T05:32:57.025Z">
+<meta property="article:author" content="围城">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/chenghongyao/resources_for_jsdelivr/picgo/1623923703716.jpeg"><link rel="shortcut icon" href="/img/1622614125221.jpg"><link rel="canonical" href="https://blog.ycha.tld/2021/06/16/cpp/cpp-easy-mistake/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'C/C++拾遗',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-07-20 05:32:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="围城" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/chenghongyao/resources_for_jsdelivr/picgo/logo.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">13</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/chenghongyao/resources_for_jsdelivr/picgo/1623923703716.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">围城</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">C/C++拾遗</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-06-16T21:33:29.000Z" title="发表于 2021-06-16 21:33:29">2021-06-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-07-20T05:32:57.025Z" title="更新于 2021-07-20 05:32:57">2021-07-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/">C++</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="C/C++拾遗"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本问列举C++中的疑难杂症，易错点，可能还有一部分语法糖，大部分来自与网络。</p>
+<h1>[C++]当父类有静态变量</h1>
+<p>当父类有静态变量时（不管是类的还是成员函数中的），派生类拥有的是同一份静态变量。很容易理解的是，实际上静态变量都类似于全局变量，在编译完成后有确定的内存空间，这个空间不属于父类，也不属于子类。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">BaseClass</span>&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> id;             <span class="comment">// 类的静态变量</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get_static_member_in_class</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">set_static_member_in_class</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;</span><br><span class="line">        id = v;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">get_static_variable_in_function</span><span class="params">(<span class="keyword">int</span> v)</span> </span>&#123;   </span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">int</span> count = <span class="number">0</span>; <span class="comment">//类成员函数的静态变量</span></span><br><span class="line">        count += v;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">int</span> BaseClass::id = <span class="number">0</span>; <span class="comment">// 初始化类的静态变量</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 继承具有静态变量的类</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ChildClass</span> :</span> <span class="keyword">public</span> BaseClass&#123;&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    BaseClass base;</span><br><span class="line">    ChildClass child;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    base.<span class="built_in">set_static_member_in_class</span>(<span class="number">555</span>);        <span class="comment">// 修改基类的静态变量</span></span><br><span class="line">    cout &lt;&lt; base.<span class="built_in">get_static_member_in_class</span>() &lt;&lt; endl;    <span class="comment">// 555</span></span><br><span class="line">    cout &lt;&lt; child.<span class="built_in">get_static_member_in_class</span>() &lt;&lt; endl;    <span class="comment">// 555</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 修改基类函数中的静态变量</span></span><br><span class="line">    cout &lt;&lt; base.<span class="built_in">get_static_variable_in_function</span>(<span class="number">666</span>) &lt;&lt; endl;    <span class="comment">// 666</span></span><br><span class="line">    cout &lt;&lt; child.<span class="built_in">get_static_variable_in_function</span>(<span class="number">0</span>) &lt;&lt; endl;    <span class="comment">// 666</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1>[C++]虚拟析构函数在继承中可以保证正确的析构</h1>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/54540305/answer/139831330">参考链接</a></p>
+<p>如果一个类需要被继承却没有将析构函数设置为虚函数（<code>virtual</code>）时，可能会导致严重的后果。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">参考：</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 没有virtual的虚构函数</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">A1</span> &#123;</span></span><br><span class="line">    ~<span class="built_in">A1</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;~A1()&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">B1</span> :</span> <span class="keyword">public</span> A1 &#123;</span><br><span class="line">    <span class="keyword">char</span>* data;</span><br><span class="line">    <span class="built_in">B1</span>() : <span class="built_in">data</span>(<span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">16</span>]) &#123;&#125;</span><br><span class="line">    ~<span class="built_in">B1</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;~B1()&quot;</span> &lt;&lt; std::endl; <span class="keyword">delete</span>[] data; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 带有virtual的虚构函数</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">A2</span> &#123;</span></span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">A2</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;~A2()&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">B2</span> :</span> <span class="keyword">public</span> A2 &#123;</span><br><span class="line">    <span class="keyword">char</span>* data;</span><br><span class="line">    <span class="built_in">B2</span>() : <span class="built_in">data</span>(<span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">16</span>]) &#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">B2</span>() &#123; std::cout &lt;&lt; <span class="string">&quot;~B2()&quot;</span> &lt;&lt; std::endl; <span class="keyword">delete</span>[] data; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    A1* p1 = <span class="keyword">new</span> B1; </span><br><span class="line">    <span class="keyword">delete</span> p1; </span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    A2* p2 = <span class="keyword">new</span> B2; </span><br><span class="line">    <span class="keyword">delete</span> p2;</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="comment">/***************</span></span><br><span class="line"><span class="comment">~A1()</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">~B2()</span></span><br><span class="line"><span class="comment">~A2()</span></span><br><span class="line"><span class="comment">***************/</span> </span><br></pre></td></tr></table></figure>
+<p>结论是：如果没有将<code>A1</code>的析构函数设置为虚函数，则delete被转为父类型<code>A1</code>的子类型实例<code>p1</code>并不会调用子类型<code>B1</code>的析构函数，导致B1中申请的内存泄露。</p>
+<p>当父类的析构函数时虚函数时，所有继承的子类析构时会依次调用父类的析构函数。</p>
+<blockquote>
+<p>如果父类有虚析构函数，子类的析构函数不用virtual关键字修饰也可以</p>
+</blockquote>
+<blockquote>
+<p>如果子类<code>C</code>继承于两个类<code>A</code>，<code>B</code>，析构时先调用谁的虚构函数？？</p>
+</blockquote>
+<h1>[C++]构造函数使用explicit防止隐式转换</h1>
+<p><a target="_blank" rel="noopener" href="//https://blog.csdn.net/qq_32642107/article/details/105462891">参考链接</a><br>
+当类的构造函数只有一个参数，或参数都有默认值时，对类的实例赋值非对应类型的变量，会导致隐式转换（使用这个变量构造一个临时的A对象）</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">A</span>(<span class="keyword">int</span> i = <span class="number">5</span>) &#123;</span><br><span class="line">        a_ = i;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> a_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A s;</span><br><span class="line">    <span class="comment">//我们会发现,我们没有重载&#x27;=&#x27;运算符,但是却可以把内置的int类型赋值给了对象A.</span></span><br><span class="line">    s = <span class="number">10</span>;</span><br><span class="line">    <span class="comment">//实际上,10被隐式转换成了下面的构造形式,所以才能这样.</span></span><br><span class="line">    <span class="comment">//s = A(10);</span></span><br><span class="line">    <span class="comment">// 但是加了explicit 的构造函数无法发生这种隐式构造</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1>[C/C++]对负数求模和求余都得到负数</h1>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num = <span class="number">-123</span>;</span><br><span class="line">cout &lt;&lt; num/<span class="number">10</span> &lt;&lt; endl; <span class="comment">// -12</span></span><br><span class="line">cout &lt;&lt; num%<span class="number">10</span> &lt;&lt; endl; <span class="comment">// -3 </span></span><br></pre></td></tr></table></figure>
+<h1>[C]<code>gets()</code>很危险！！</h1>
+<p>这是在<a target="_blank" rel="noopener" href="http://stackoverflow.com/questions/1694036/why-is-the-gets-function-dangerous-why-should-it-not-be-used">stackflow</a>看到的，<code>gets</code> 函数的主要问题在于没有参数指示传入 <code>buffer</code> 的大小，所以有溢出导致程序崩溃的可能。<br>
+<code>gets</code> 函数已经在 C99 的 <em>ISO/IEC 9899:1999/Cor.3:2007</em>———技术勘误3中被标记为 <code>obsolescent</code> 和 <code>deprecated</code>，并从C11标准 <em>ISO/IEC 9899:2011</em> 中移除。</p>
+<p><code>gets()</code> 函数可以用 <code>fgets()</code> 替代。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line"><span class="keyword">while</span> (<span class="built_in">fgets</span>(buffer, <span class="built_in"><span class="keyword">sizeof</span></span>(buffer), stdin) != <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>标准C库中还有很多类似的函数，也有一些可替代的函数(<a target="_blank" rel="noopener" href="https://owasp.org/www-community/attacks/Buffer_overflow_attack">Buffer Overflow Attack</a>)。</p>
+<table>
+<thead>
+<tr>
+<th>原函数</th>
+<th>替代函数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gets</td>
+<td>fgets()</td>
+</tr>
+<tr>
+<td>strcpy()</td>
+<td>strncpy()</td>
+</tr>
+<tr>
+<td>strcat()</td>
+<td>strncat()</td>
+</tr>
+<tr>
+<td>sprintf()</td>
+<td>snprintf()</td>
+</tr>
+<tr>
+<td>scanf</td>
+<td></td>
+</tr>
+<tr>
+<td>getcwd()</td>
+<td></td>
+</tr>
+<tr>
+<td>realpath()</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1>[C++]构造与析构顺序</h1>
+<p>先总结如下</p>
+<ol>
+<li>在一个域内，先定义的变量先构造，但是后析构；</li>
+<li>派生类构造前会先构造父类，在构造派生类，析构时先析构派生类，在析构父类；</li>
+<li>当派生类有多个父类时，按派生类定义时冒号后面的父类顺序，从左往右构造，析构时则正好相反（先构造的后析构）；</li>
+<li>派生类的父类构造完成后，再运行构造函数冒号后面的变量构造，再运行构造函数实体。</li>
+</ol>
+<h2 id="一个域内不同变量的构造与析构">一个域内不同变量的构造与析构</h2>
+<p>在一个域内，先定义的变量先构造，但是后析构</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> ai = <span class="number">0</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">A</span> &#123;</span></span><br><span class="line">    <span class="built_in">A</span>()&#123;m = ai++;cout &lt;&lt; <span class="string">&quot;A&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;;</span><br><span class="line">    ~<span class="built_in">A</span>() &#123;cout &lt;&lt; <span class="string">&quot;~A&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;</span><br><span class="line">    <span class="keyword">int</span> m;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> bi = <span class="number">0</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">B</span> &#123;</span></span><br><span class="line">    <span class="built_in">B</span>()&#123; m = bi++;cout &lt;&lt; <span class="string">&quot;B&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;;</span><br><span class="line">    ~<span class="built_in">B</span>() &#123;cout &lt;&lt; <span class="string">&quot;~B&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;</span><br><span class="line">    <span class="keyword">int</span> m;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A a;	<span class="comment">// 先定义的变量先构造，但是更晚析构(在B析构后析构)</span></span><br><span class="line">    B b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际输出为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A0</span><br><span class="line">B0</span><br><span class="line">~B0</span><br><span class="line">~A0</span><br></pre></td></tr></table></figure>
+<h2 id="派生类的构造与析构">派生类的构造与析构</h2>
+<p>派生类构造前会先构造父类，在构造派生类，析构时先析构派生类，再析构父类。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> ai = <span class="number">0</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">A</span> &#123;</span></span><br><span class="line">    <span class="built_in">A</span>()&#123;m = ai++;cout &lt;&lt; <span class="string">&quot;A&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;;</span><br><span class="line">    <span class="built_in">A</span>(<span class="keyword">const</span> A&amp; a) &#123;m=ai++;cout &lt;&lt; <span class="string">&quot;copy A&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;</span><br><span class="line">    ~<span class="built_in">A</span>() &#123;cout &lt;&lt; <span class="string">&quot;~A&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;</span><br><span class="line">    <span class="keyword">int</span> m;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> ci = <span class="number">0</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">C</span> :</span> <span class="keyword">public</span> A &#123; <span class="comment">// 在构造C之前会先构造父类A</span></span><br><span class="line">    <span class="built_in">C</span>()&#123;p=ci++;cout &lt;&lt; <span class="string">&quot;C&quot;</span> &lt;&lt; p &lt;&lt; endl;&#125;;</span><br><span class="line">    ~<span class="built_in">C</span>() &#123;cout &lt;&lt; <span class="string">&quot;~C&quot;</span> &lt;&lt; p &lt;&lt; endl;&#125;</span><br><span class="line">    <span class="keyword">int</span> p;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    C c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际输出为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A0</span><br><span class="line">C0</span><br><span class="line">~C0</span><br><span class="line">~A0</span><br></pre></td></tr></table></figure>
+<h2 id="具有多个父类的派生类的构造与析构">具有多个父类的派生类的构造与析构</h2>
+<p>当派生类有多个父类时，按派生类定义时冒号后面的父类顺序，从左往右构造，析构时则正好相反（先构造的后析构）。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> ai = <span class="number">0</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">A</span> &#123;</span></span><br><span class="line">    <span class="built_in">A</span>()&#123;m = ai++;cout &lt;&lt; <span class="string">&quot;A&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;;</span><br><span class="line">    <span class="built_in">A</span>(<span class="keyword">const</span> A&amp; a) &#123;m=ai++;cout &lt;&lt; <span class="string">&quot;copy A&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;</span><br><span class="line">    ~<span class="built_in">A</span>() &#123;cout &lt;&lt; <span class="string">&quot;~A&quot;</span> &lt;&lt; m &lt;&lt; endl;&#125;</span><br><span class="line">    <span class="keyword">int</span> m;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> bi = <span class="number">0</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">B</span> &#123;</span></span><br><span class="line">    <span class="built_in">B</span>()&#123; b = bi++;cout &lt;&lt; <span class="string">&quot;B&quot;</span> &lt;&lt; b &lt;&lt; endl;&#125;;</span><br><span class="line">    ~<span class="built_in">B</span>() &#123;cout &lt;&lt; <span class="string">&quot;~B&quot;</span> &lt;&lt; b&lt;&lt; endl;&#125;</span><br><span class="line">    <span class="keyword">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> ci = <span class="number">0</span>;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">C</span> :</span> <span class="keyword">public</span> A,<span class="keyword">public</span> B &#123; </span><br><span class="line">    <span class="built_in">C</span>()&#123;p=ci++;cout &lt;&lt; <span class="string">&quot;C&quot;</span> &lt;&lt; p &lt;&lt; endl;&#125;;</span><br><span class="line">    ~<span class="built_in">C</span>() &#123;cout &lt;&lt; <span class="string">&quot;~C&quot;</span> &lt;&lt; p &lt;&lt; endl;&#125;</span><br><span class="line">    <span class="keyword">int</span> p;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    C c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实际输出为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">A0</span><br><span class="line">B0</span><br><span class="line">C0</span><br><span class="line">~C0</span><br><span class="line">~B0</span><br><span class="line">~A0</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">围城</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.ycha.tld/2021/06/16/cpp/cpp-easy-mistake/">https://blog.ycha.tld/2021/06/16/cpp/cpp-easy-mistake/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.ycha.tld" target="_blank">围城</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/chenghongyao/resources_for_jsdelivr/picgo/1623923703716.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.png" target="_blank"><img class="post-qr-code-img" src="/img/wechat.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/06/18/algorithm/algorithm-dijkstra/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/chenghongyao/resources_for_jsdelivr/picgo/1624017733437.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">迪杰斯特拉算法（Dijkstra算法）</div></div></a></div><div class="next-post pull-right"><a href="/2021/06/15/algorithm/algorithm-tsp/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/chenghongyao/resources_for_jsdelivr/picgo/6MQ5LAZ6FY3O2ROJDDD.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">旅行者问题(TSP)</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">[C++]当父类有静态变量</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">[C++]虚拟析构函数在继承中可以保证正确的析构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">[C++]构造函数使用explicit防止隐式转换</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">[C&#x2F;C++]对负数求模和求余都得到负数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">[C]gets()很危险！！</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">[C++]构造与析构顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E5%9F%9F%E5%86%85%E4%B8%8D%E5%90%8C%E5%8F%98%E9%87%8F%E7%9A%84%E6%9E%84%E9%80%A0%E4%B8%8E%E6%9E%90%E6%9E%84"><span class="toc-number">6.1.</span> <span class="toc-text">一个域内不同变量的构造与析构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B4%BE%E7%94%9F%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%E4%B8%8E%E6%9E%90%E6%9E%84"><span class="toc-number">6.2.</span> <span class="toc-text">派生类的构造与析构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E6%9C%89%E5%A4%9A%E4%B8%AA%E7%88%B6%E7%B1%BB%E7%9A%84%E6%B4%BE%E7%94%9F%E7%B1%BB%E7%9A%84%E6%9E%84%E9%80%A0%E4%B8%8E%E6%9E%90%E6%9E%84"><span class="toc-number">6.3.</span> <span class="toc-text">具有多个父类的派生类的构造与析构</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By 围城</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><a href="beian.miit.gov.cn"><img class="icp-icon" src="https://img.alicdn.com/tfs/TB1..50QpXXXXX7XpXXXXXXXXXX-40-40.png"><span>备案号：粤ICP备2021100704号</span></a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      false && mermaid.init()
+    })
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
